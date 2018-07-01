@@ -1,5 +1,5 @@
 {
-    "name": "christopher-paul-shaw/entity",
+    "name": "christopher-paul-shaw/Entity",
     "description": "Flat File Data Management",
     "require": {
         "php": "^7.1",
