@@ -1,0 +1,31 @@
+{
+    "name": "christopher-paul-shaw/entity",
+    "description": "Flat File Data Management",
+    "require": {
+        "php": "^7.1",
+        "phpgt/webengine": "^2.2"
+    },
+
+    "require-dev": {
+        "phpunit/phpunit": "^6.3"
+    },
+
+
+    "authors": [
+        {
+            "name": "Chris Shaw",
+            "email": "composer@chris-shaw.com"
+        }
+    ],
+
+    "autoload": {
+        "psr-4": {
+            "App\\": "./src"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "App\\Test\\": "./test/unit"
+        }
+    }
+}
