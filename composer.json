@@ -1,6 +1,7 @@
 {
     "name": "christopher-paul-shaw/Entity",
     "description": "Flat File Data Management",
+    "minimum-stability": "dev",
     "require": {
         "php": "^7.1",
         "phpgt/webengine": "^2.2"
