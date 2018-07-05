@@ -1,5 +1,5 @@
 {
-    "name": "christopher-paul-shaw/DataStore",
+    "name": "christopher-paul-shaw/datastore",
     "description": "Interacting with File Based Data",
     "minimum-stability": "dev",
     "require": {
