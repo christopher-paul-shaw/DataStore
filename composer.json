@@ -1,6 +1,6 @@
 {
-    "name": "christopher-paul-shaw/Entity",
-    "description": "Flat File Data Management",
+    "name": "christopher-paul-shaw/DataStore",
+    "description": "Interacting with File Based Data",
     "minimum-stability": "dev",
     "require": {
         "php": "^7.1",
