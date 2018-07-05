@@ -4,7 +4,7 @@ use Gt\Core\Path;
 use Exception;
 use DirectoryIterator;
 
-class Entity {
+class DataStore {
 
 	public $type = 'default';
 	

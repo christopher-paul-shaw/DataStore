@@ -1,10 +1,10 @@
 <?php
 namespace App\Test;
-use App\Entity;
+use App\DataStore;
 use PHPUnit\Framework\TestCase;
 use Gt\Core\Path;
 
-class EntityTest extends TestCase {
+class DataStoreTest extends TestCase {
 
     public function tearDown () {
         $path = Path::get(Path::DATA)."/default/";
@@ -17,10 +17,10 @@ class EntityTest extends TestCase {
            'test' => 'case'
         ];
               
-        $setup_entity = new Entity('exampleID');
+        $setup_entity = new DataStore('exampleID');
         $setup_entity->create($payload);
         
-        $e = new Entity('exampleID');      
+        $e = new DataStore('exampleID');      
         $this->assertEquals($payload['test'], $e->getValue('test'));    
     }
 
@@ -31,13 +31,13 @@ class EntityTest extends TestCase {
            'test' => 'case'
         ];
               
-        $setup_entity = new Entity('exampleID');
+        $setup_entity = new DataStore('exampleID');
         $setup_entity->create($payload);
      
-        $e = new Entity('exampleID');
+        $e = new DataStore('exampleID');
         $e->delete();
         
-        $e = new Entity('exampleID'); 
+        $e = new DataStore('exampleID'); 
         $this->assertEquals(false, $e->getValue('test'));
       
     }   
@@ -48,7 +48,7 @@ class EntityTest extends TestCase {
            './test' => 'case'
         ];
               
-        $setup_entity = new Entity('exampleID');
+        $setup_entity = new DataStore('exampleID');
         $this->expectExceptionMessage('Invalid Field');
         $setup_entity->create($payload);
     }
@@ -59,14 +59,14 @@ class EntityTest extends TestCase {
            './test' => 'case'
         ];
               
-        $e1 = new Entity('exampleID');
+        $e1 = new DataStore('exampleID');
         $e1->create(['test' => 1, 'foo' => 'bar']);
-        $e2 = new Entity('exampleID2');
+        $e2 = new DataStore('exampleID2');
         $e2->create(['test' => 2, 'foo' => 'bar']);
-        $e3 = new Entity('exampleID3');
+        $e3 = new DataStore('exampleID3');
         $e3->create(['test' => 3, 'foo' => 'bar']);
  
-        $search = new Entity();
+        $search = new DataStore();
         $results = $search->search();
 
         $this->assertTrue(count($results) > 0);
@@ -80,11 +80,11 @@ class EntityTest extends TestCase {
            'test' => 'case'
         ];
               
-        $n = new Entity('exampleID');
+        $n = new DataStore('exampleID');
         $n->create($payload);
         
         $this->expectExceptionMessage('Entity Already Exists');
-        $e = new Entity('exampleID');
+        $e = new DataStore('exampleID');
         $e->create($payload);  
     }   
     
@@ -95,7 +95,7 @@ class EntityTest extends TestCase {
         ];
          
         $string = 'something';    
-        $e = new Entity('exampleID');
+        $e = new DataStore('exampleID');
         $e->create($payload);
         $e->setValue('test', $string);      
         $this->assertEquals($string, $e->getValue('test'));  
@@ -109,7 +109,7 @@ class EntityTest extends TestCase {
         ];
          
         $string = 'something';    
-        $e = new Entity('exampleID');
+        $e = new DataStore('exampleID');
         $e->create($payload);
 
 	$new_payload = [
