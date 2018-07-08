@@ -112,13 +112,61 @@ class DataStoreTest extends TestCase {
         $e = new DataStore('exampleID');
         $e->create($payload);
 
-	$new_payload = [
-		'test' => $string,
-		'id_entity' => 'new'
-	];
+    	$new_payload = [
+    		'test' => $string,
+    		'id_entity' => 'new'
+    	];
 
         $e->update($new_payload);      
         $this->assertEquals($string, $e->getValue('test'));  
+    }
+
+    public function testICanSearchFilter() {
+
+
+        $e = new DataStore('example1');
+        $e->create(['name' => 'foo']);
+
+
+        $e = new DataStore('example2');
+        $e->create(['name' => 'bar']);
+
+
+        $e = new DataStore('example3');
+        $e->create(['name' => 'foobar']);
+
+
+
+        $e = new DataStore();
+        $e->setType('default');
+
+
+        // TODO - Test Cant Access Files during Search.
+        $results = $e->search();
+        print_r($results);
+        $results = $e->search(
+            ['name','=','foo']
+        );
+         print_r($results);
+        
+        /*
+        $this->assertTrue(count($results) > 0);
+
+        $results = $e->search(
+            ['name','like','foo']
+        );
+
+        $this->assertTrue(count($results) == 2);
+
+        $results = $e->search(
+            ['name','=','none']
+        );
+
+        $this->assertTrue(count($results) == 0);
+
+    */
+
+
     }
 
     public function removeDirectory($path) {

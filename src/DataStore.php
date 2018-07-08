@@ -11,11 +11,26 @@ class DataStore {
 	public $blockFields = [];
 	protected $privateFields = [];
 
+	const NOT_EQUALS = '!=';
+	const EQUALS = '=';
+	const GREATER_THAN = '>';
+	const GREATER_THAN_EQUALS = '>=';
+	const LESS_THAN = '<';
+	const LESS_THAN_EQUALS = '<=';
+	const LIKE = 'like';
+	const IN = 'in';
+
 	public function __construct ($identifier=false, $readOnly=false) {
 		$this->identifier = strtolower($identifier);
 		$this->path = Path::get(Path::DATA)."/{$this->type}/";
 		$this->currentDirectory =  $this->path.$this->identifier; 
 		$this->readOnly = $readOnly;  
+	}
+
+	public function setType($type) {
+		$this->type = $type;
+		$this->path = Path::get(Path::DATA)."/{$this->type}/";
+		$this->currentDirectory =  $this->path.$this->identifier; 
 	}
 
 	public function create ($payload) {  
@@ -38,17 +53,88 @@ class DataStore {
 	public function delete () {
 		$this->removeDirectory($this->currentDirectory);
 	} 
-	
+	/*
+		Example
+		$d = new DataStore();
+		$results = $d->search([
+			['name',\App\DataStore::LIKE,'admin'], // Key, Operator, Value
+			['permission','!=', 'admin']
+		]);
+
+	*/
 	public function search ($filters=false) { 
 		$items = [];
 
 		$dir = new DirectoryIterator($this->path);
+
+		$filter_fields = [];
+		if (is_array($filters)) {
+			foreach ($filters as $i => $keys) {
+				if (!isset($keys[0])||!isset($keys[1])||!isset($keys[2])) continue;
+				$filter_field = $keys[0];
+				$filter_operator = $keys[1];
+				$filter_value = $keys[2];
+
+				$filter_fields[$filter_field] = [
+					'operator' => $filter_operator,
+					'value' => $filter_value
+				];
+			}
+		}
 
 		foreach ($dir as $fileinfo) {
 			if (!$fileinfo->isDir() || $fileinfo->isDot()) continue;
 			$identifier = $fileinfo->getFilename();
 			$items[$identifier]['id'] = $identifier;
 			$this->currentDirectory = $this->path.$identifier.'/';
+
+			$datastore = new self($identifier);
+			$datastore->setType($this->type);
+			print $this->currentDirectory;
+			$faliures = 0;
+			foreach ($filter_fields as $field => $opt) {
+				$value = strtolower($datastore->getValue($field));
+
+				$match = false;
+				switch ($opt['operator']) {
+					case '!=':
+						$match = $value != $opt['value'];
+						break;
+					case '>':
+						$match = $value > $opt['value'];
+						break;
+					case '>=':
+						$match = $value >= $opt['value'];
+						break;
+					case '>':
+						$match = $value > $opt['value'];
+						break;
+					case '>=':
+						$match = $value >= $opt['value'];
+						break;
+					case 'like':
+						$match = strstr($opt['value'], $value);
+						break;
+					case 'in':
+						$match = in_array($value, explode(',',$opt['value']));
+						break;
+					default:
+						$match = $value == $opt['value'];
+				}
+			
+				if (!$match) {
+
+					$faliures += 1;
+				}
+			}
+
+			// Unset on Failure
+			if ($faliures > 0) {
+				unset($items[$identifier]);
+				continue;
+			}
+
+			// Get Values for Each Identifier
 			$valuesDirectory = new DirectoryIterator($this->currentDirectory);
 			foreach ($valuesDirectory as $valueinfo) {
 				if ($valueinfo->isDot()) continue;
@@ -81,7 +167,6 @@ class DataStore {
 		return file_put_contents($path, $value);
 	}
 
-	
 	private function removeDirectory($path) {
 		if ($this->readOnly) return; 
 		$files = glob($path . '/*');
