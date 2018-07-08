@@ -90,7 +90,7 @@ class DataStore {
 
 			$datastore = new self($identifier);
 			$datastore->setType($this->type);
-			print $this->currentDirectory;
+
 			$faliures = 0;
 			foreach ($filter_fields as $field => $opt) {
 				$value = strtolower($datastore->getValue($field));
