@@ -1,6 +1,14 @@
 # DataStore
 This is a class which uses the directory and file structure of a filesystem to store and manipulate information. It does so using unique indentifiers for folder names and .dat files to hold the content of fields.
 
+# Hostry Timeline for DataStore
+DataStore is the evolution of a class called Entity from (https://webpi.chris-shaw.com) Entity was a raw class to standardise how the WebPi software would interact with data stored within the filesystem
+
+- Started Life as Entity.php in WebPi (https://webpi.chris-shaw.com)
+- Became a general way for WebPi to access data and becoming basis for an authentication class.
+- Was moved to its own repository with unit tests to be shared between progects
+- Renamed to DataStore and Added to packagest for composer install
+
 # Usage
 
 ## Creating
