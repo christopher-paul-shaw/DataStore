@@ -30,6 +30,11 @@ This is a class which uses the directory and file structure of a filesystem to s
     
 ## Searching
 
+    $filters = [
+        ['field','=','value'],
+        ['field','>','value']
+    ];
+    
     $search = new DataStore();
     $results = $search->search();
 
