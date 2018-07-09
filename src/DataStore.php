@@ -53,15 +53,7 @@ class DataStore {
 	public function delete () {
 		$this->removeDirectory($this->currentDirectory);
 	} 
-	/*
-		Example
-		$d = new DataStore();
-		$results = $d->search([
-			['name',\App\DataStore::LIKE,'admin'], // Key, Operator, Value
-			['permission','!=', 'admin']
-		]);
 
-	*/
 	public function search ($filters=false) { 
 		$items = [];
 
@@ -88,20 +80,17 @@ class DataStore {
 			$items[$identifier]['id'] = $identifier;
 			$this->currentDirectory = $this->path.$identifier.'/';
 
-
-#			TODO - Not Working For Test
 			$datastore = new DataStore($identifier);
 			$datastore->setType($this->type);
 
-
-			$faliures = 0;
+			$failures = 0;
 			foreach ($filter_fields as $field => $opt) {
 				$value = strtolower($datastore->getValue($field));
-				$failures += $this->comparitor($value, $opt) ? 1 : 0;
+				$failures += $this->comparitor($value, $opt) ? 0 : 1;
 			}
 
 			// Unset on Failure
-			if ($faliures > 0) {
+			if ($failures > 0) {
 				unset($items[$identifier]);
 				continue;
 			}
@@ -121,33 +110,32 @@ class DataStore {
 	}
 
 	private function comparitor($value, $opt) {
-		$match = false;
 		switch ($opt['operator']) {
 			case '!=':
-				$match = $value != $opt['value'];
+				return $value != $opt['value'];
 				break;
 			case '>':
-				$match = $value > $opt['value'];
+				return $value > $opt['value'];
 				break;
 			case '>=':
-				$match = $value >= $opt['value'];
+				return $value >= $opt['value'];
 				break;
-			case '>':
-				$match = $value > $opt['value'];
+			case '<':
+				return $value < $opt['value'];
 				break;
-			case '>=':
-				$match = $value >= $opt['value'];
+			case '<=':
+				return $value <= $opt['value'];
 				break;
 			case 'like':
-				$match = strstr($opt['value'], $value);
+				return strstr($value,$opt['value']);
 				break;
 			case 'in':
-				$match = in_array($value, explode(',',$opt['value']));
+				return in_array($value, explode(',',$opt['value']));
 				break;
+			case '=':
 			default:
-				$match = $value == $opt['value'];
+				return $value == $opt['value'];
 		}
-		return $match;
 	}
 
 	private function protectField($field) {

@@ -125,47 +125,67 @@ class DataStoreTest extends TestCase {
 
 
         $e = new DataStore('example1');
-        $e->create(['name' => 'foo']);
+        $e->create(['name' => 'foo', 'val' => 1]);
 
 
         $e = new DataStore('example2');
-        $e->create(['name' => 'bar']);
+        $e->create(['name' => 'bar', 'val' => 10]);
 
 
         $e = new DataStore('example3');
-        $e->create(['name' => 'foobar']);
-
-
+        $e->create(['name' => 'foobar', 'val' => 100]);
 
         $e = new DataStore();
         $e->setType('default');
 
+        $filters = [
+            ['name','=','foo']
+        ];
 
-        // TODO - Test Cant Access Files during Search.
-        $results = $e->search();
-        print_r($results);
-        $results = $e->search(
-            ['name','!=','foo']
-        );
-        print_r($results);
-        
-        /*
-        $this->assertTrue(count($results) > 0);
+        $results = $e->search($filters);
+        $this->assertTrue(count($results) == 1);
 
-        $results = $e->search(
+        $filters = [
             ['name','like','foo']
-        );
-
+        ];
+        $results = $e->search($filters);
         $this->assertTrue(count($results) == 2);
 
-        $results = $e->search(
-            ['name','=','none']
-        );
+        $filters = [
+            ['name','!=','foo']
+        ];
+        $results = $e->search($filters);
+        $this->assertTrue(count($results) == 2);
 
-        $this->assertTrue(count($results) == 0);
+        $filters = [
+            ['val','>=','1']
+        ];
+        $results = $e->search($filters);
+        $this->assertTrue(count($results) == 3);
 
-    */
+        $filters = [
+            ['val','>','1']
+        ];
+        $results = $e->search($filters);
+        $this->assertTrue(count($results) == 2);
 
+        $filters = [
+            ['val','<','100']
+        ];
+        $results = $e->search($filters);
+        $this->assertTrue(count($results) == 2);
+
+        $filters = [
+            ['val','<=','100']
+        ];
+        $results = $e->search($filters);
+        $this->assertTrue(count($results) == 3);
+
+        $filters = [
+            ['val','in','10,100']
+        ];
+        $results = $e->search($filters);
+        $this->assertTrue(count($results) == 2);
 
     }
 
