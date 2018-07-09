@@ -23,14 +23,14 @@ class DataStore {
 	public function __construct ($identifier=false, $readOnly=false) {
 		$this->identifier = strtolower($identifier);
 		$this->path = Path::get(Path::DATA)."/{$this->type}/";
-		$this->currentDirectory =  $this->path.$this->identifier; 
+		$this->currentDirectory =  $this->path.$this->identifier.'/'; 
 		$this->readOnly = $readOnly;  
 	}
 
 	public function setType($type) {
 		$this->type = $type;
 		$this->path = Path::get(Path::DATA)."/{$this->type}/";
-		$this->currentDirectory =  $this->path.$this->identifier; 
+		$this->currentDirectory =  $this->path.$this->identifier.'/'; 
 	}
 
 	public function create ($payload) {  
@@ -88,44 +88,16 @@ class DataStore {
 			$items[$identifier]['id'] = $identifier;
 			$this->currentDirectory = $this->path.$identifier.'/';
 
-			$datastore = new self($identifier);
+
+#			TODO - Not Working For Test
+			$datastore = new DataStore($identifier);
 			$datastore->setType($this->type);
+
 
 			$faliures = 0;
 			foreach ($filter_fields as $field => $opt) {
 				$value = strtolower($datastore->getValue($field));
-
-				$match = false;
-				switch ($opt['operator']) {
-					case '!=':
-						$match = $value != $opt['value'];
-						break;
-					case '>':
-						$match = $value > $opt['value'];
-						break;
-					case '>=':
-						$match = $value >= $opt['value'];
-						break;
-					case '>':
-						$match = $value > $opt['value'];
-						break;
-					case '>=':
-						$match = $value >= $opt['value'];
-						break;
-					case 'like':
-						$match = strstr($opt['value'], $value);
-						break;
-					case 'in':
-						$match = in_array($value, explode(',',$opt['value']));
-						break;
-					default:
-						$match = $value == $opt['value'];
-				}
-			
-				if (!$match) {
-
-					$faliures += 1;
-				}
+				$failures += $this->comparitor($value, $opt) ? 1 : 0;
 			}
 
 			// Unset on Failure
@@ -146,6 +118,36 @@ class DataStore {
 		}
 
 		return $items;  
+	}
+
+	private function comparitor($value, $opt) {
+		$match = false;
+		switch ($opt['operator']) {
+			case '!=':
+				$match = $value != $opt['value'];
+				break;
+			case '>':
+				$match = $value > $opt['value'];
+				break;
+			case '>=':
+				$match = $value >= $opt['value'];
+				break;
+			case '>':
+				$match = $value > $opt['value'];
+				break;
+			case '>=':
+				$match = $value >= $opt['value'];
+				break;
+			case 'like':
+				$match = strstr($opt['value'], $value);
+				break;
+			case 'in':
+				$match = in_array($value, explode(',',$opt['value']));
+				break;
+			default:
+				$match = $value == $opt['value'];
+		}
+		return $match;
 	}
 
 	private function protectField($field) {

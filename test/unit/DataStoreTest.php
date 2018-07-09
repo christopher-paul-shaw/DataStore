@@ -145,9 +145,9 @@ class DataStoreTest extends TestCase {
         $results = $e->search();
         print_r($results);
         $results = $e->search(
-            ['name','=','foo']
+            ['name','!=','foo']
         );
-         print_r($results);
+        print_r($results);
         
         /*
         $this->assertTrue(count($results) > 0);
