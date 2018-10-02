@@ -70,3 +70,7 @@ The preferred method is using composer (https://getcomposer.org/) and can be ins
 You can also clone the repository from github
 
     git clone git@github.com:christopher-paul-shaw/DataStore.git
+
+# Running Tests
+
+    vendor/bin/phpunit test
