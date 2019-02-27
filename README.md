@@ -1,4 +1,4 @@
-# DataStore
+# Summary
 This is a class which uses the directory and file structure of a filesystem to store and manipulate information. It does so using unique indentifiers for folder names and .dat files to hold the content of fields.
 
 # Why would you use DataStore
