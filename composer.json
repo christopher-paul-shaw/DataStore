@@ -21,12 +21,12 @@
 
     "autoload": {
         "psr-4": {
-            "App\\": "./src"
+            "CPS\\": "./src"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "App\\Test\\": "./test/unit"
+            "CPS\\Test\\": "./test/unit"
         }
     }
 }

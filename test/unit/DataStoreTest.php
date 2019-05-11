@@ -1,6 +1,6 @@
 <?php
-namespace App\Test;
-use App\DataStore;
+namespace CPS\Test;
+use CPS\DataStore;
 use PHPUnit\Framework\TestCase;
 use Gt\Core\Path;
 

@@ -1,5 +1,5 @@
 <?php
-namespace App;
+namespace CPS;
 use Gt\Core\Path;
 use Exception;
 use DirectoryIterator;
