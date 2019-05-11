@@ -1,6 +1,5 @@
 <?php
 namespace CPS;
-use Gt\Core\Path;
 use Exception;
 use DirectoryIterator;
 
@@ -20,24 +19,23 @@ class DataStore {
 	const LIKE = 'like';
 	const IN = 'in';
 
-	public function __construct ($identifier=false, $readOnly=false) {
+	public function __construct ($identifier=false, $readOnly=false, $path = './data/') {
 		$this->identifier = strtolower($identifier);
-		$this->path = Path::get(Path::DATA)."/{$this->type}/";
-		$this->currentDirectory =  $this->path.$this->identifier.'/'; 
+		$this->path = $path;
+		$this->setType($this->type);
 		$this->readOnly = $readOnly;  
 	}
 
 	public function setType($type) {
 		$this->type = $type;
-		$this->path = Path::get(Path::DATA)."/{$this->type}/";
-		$this->currentDirectory =  $this->path.$this->identifier.'/'; 
+		$this->directory = "{$this->path}/{$this->type}/";
+		$this->currentDirectory =  $this->directory.$this->identifier.'/'; 
 	}
 
 	public function create ($payload) {  
 		if (file_exists($this->currentDirectory)) {
 			throw new Exception("Entity Already Exists");
 		}      
-
 		mkdir($this->currentDirectory, 0777, true);    	
 		foreach ($payload as $field => $value) {
 			$this->setValue($field,$value);
@@ -57,7 +55,7 @@ class DataStore {
 	public function search ($filters=false) { 
 		$items = [];
 
-		$dir = new DirectoryIterator($this->path);
+		$dir = new DirectoryIterator($this->directory);
 
 		$filter_fields = [];
 		if (is_array($filters)) {
@@ -78,7 +76,7 @@ class DataStore {
 			if (!$fileinfo->isDir() || $fileinfo->isDot()) continue;
 			$identifier = $fileinfo->getFilename();
 			$items[$identifier]['id'] = $identifier;
-			$this->currentDirectory = $this->path.$identifier.'/';
+			$this->currentDirectory = $this->directory.$identifier.'/';
 
 			$datastore = new DataStore($identifier);
 			$datastore->setType($this->type);

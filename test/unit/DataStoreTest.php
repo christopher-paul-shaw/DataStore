@@ -7,7 +7,7 @@ use Gt\Core\Path;
 class DataStoreTest extends TestCase {
 
     public function tearDown () {
-        $path = Path::get(Path::DATA)."/default/";
+        $path = "./data/default/";
         $this->removeDirectory($path);
     }
 
